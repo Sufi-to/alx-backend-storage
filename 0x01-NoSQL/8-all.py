@@ -2,7 +2,7 @@
 """Module that interacts with a mongo database."""
 
 
-if __name__ == "__main__":
-    def list_all(mongo_collection):
-        print(db.list_collection_names())
+def list_all(mongo_collection):
+    """Returns the list of all the documents in the collection"""
+    return [i for i in mongo_collection.find()]
         
