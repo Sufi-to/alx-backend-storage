@@ -10,21 +10,10 @@ if __name__ == "__main__":
     len_coll = nginx_collection.count_documents({})
     print("{} logs".format(len_coll))
     print('Methods:')
-    print("\tmethod GET: ".format(nginx_collection.count_documents(
-        {'$expr': {'$eq': ['$method', 'GET']}})
-        ))
-    print("\tmethod POST: ".format(nginx_collection.count_documents(
-        {'$expr': {'$eq': ['$method', 'POST']}})
-        ))
-    print("\tmethod PUT: ".format(nginx_collection.count_documents(
-        {'$expr': {'$eq': ['$method', 'PUT']}})
-        ))
-    print("\tmethod Patch: ".format(nginx_collection.count_documents(
-        {'$expr': {'$eq': ['$method', 'PATCH']}})
-        ))
-    print("\tmethod delete: {}".format(nginx_collection.count_documents(
-        {'$expr': {'$eq': ['$method', 'DELETE']}})
-        ))
+    methods = ['GET', 'POST', 'PUT', 'PATCH', 'DELETE']
+    for method in methods:
+        method_count = len(list(nginx_collection.find({'method': method})))
+        print('\tmethod {}: {}'.format(method, method_count))
     print("{} status check".format(
         len(list(nginx_collection.find({'method': 'GET', 'path': '/status'}))))
         )
