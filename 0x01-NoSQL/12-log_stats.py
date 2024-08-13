@@ -2,11 +2,9 @@
 """Module that shows log parsing using a mongodb and python"""
 
 
-from pymongo import MongoClient
-
-
 if __name__ == "__main__":
     """Return the log stats of the nginx db"""
+    from pymongo import MongoClient
     client = MongoClient('mongodb://127.0.0.1:27017')
     nginx_collection = client.logs.nginx
     len_coll = nginx_collection.count_documents({})
