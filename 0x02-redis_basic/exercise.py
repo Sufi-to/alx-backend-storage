@@ -8,6 +8,19 @@ from functools import wraps
 from typing import Any, Union, Optional, Callable
 
 
+def replay(method: Callable) -> None:
+    """Displays the history of calls of a particular function."""
+    method_name = method.__qualname__
+    cache = redis.Redis()
+    calls = cache.get(method_name).decode("utf-8")
+    print("{} was called {} times:".format(method_name, calls))
+    ins = cache.lrange(method_name + ":inputs", 0, -1)
+    outs = cache.lrange(method_name + ":outputs", 0, -1)
+    for key, value in zip(ins, outs):
+        print("{}(*{}) -> {}".format(method_name, key.decode('utf-8'),
+                                     value.decode('utf-8')))
+
+
 def call_history(method: Callable) -> Callable:
     """Decorator to store the history of inputs and outputs for
     a particular function."""
@@ -22,7 +35,6 @@ def call_history(method: Callable) -> Callable:
         data = method(self, *args, **kwargs)
         self._redis.rpush(outs, str(data))
         return data
-
     return wrapper
 
 
